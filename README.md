@@ -14,4 +14,4 @@ The chimerax.core.commands module only activates when there is an active Chimera
 * Enable compiling three proteins for AlphaFold Multimer prediction
 * Minimize path dependency in the script
 * Automate name and directory change for videos
-* Troubleshooting ChimeraX crashing issue
+* Troubleshoot ChimeraX crashing issue
