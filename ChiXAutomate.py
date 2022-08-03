@@ -2,6 +2,7 @@ from tempfile import tempdir
 import gspread
 import time
 from datetime import date
+from matplotlib.pyplot import thetagrids
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, DirCreatedEvent, DirMovedEvent
 from chimerax.core.commands import run
@@ -40,26 +41,40 @@ csix = inter.col_values(6)
 csev = inter.col_values(7)
 acc = []
 acc2 = []
+acc3 = []
 seqacc = []
 seqacc2 = []
+seqacc3 = []
 if len(csix) > len(csev):
    for x in range(len(csev) + 1, len(csix) + 1):
-      val = inter.acell('B' + str(x)).value
-      acc.append(val)
-      val2 = inter.acell('C' + str(x)).value
-      acc2.append(val2)
-      inter.update('G' + str(x), date.today().strftime("%m/%d/%y"))
+        val = inter.acell('B' + str(x)).value
+        acc.append(val)
+        val2 = inter.acell('C' + str(x)).value
+        acc2.append(val2)
+        if inter.acell('D' + str(x)).value != None:
+            val3 = inter.acell('D' + str(x)).value
+            acc3.append(val3)
+        else:
+            acc3.append(0)
+        inter.update('G' + str(x), date.today().strftime("%m/%d/%y"))
 protlist(acc, seqacc)
 protlist(acc2, seqacc2)
+protlist(acc3, seqacc3)
 
 # Run AlphaFold predictions on ChimeraX
 def iterate(num):
     time.sleep(3)
-    run(session, 'alphafold predict ' + str(seqacc[num]) + ',' + str(seqacc2[num]))
+    if seqacc3[num] != 0:
+        run(session, 'alphafold predict ' + str(seqacc[num]) + ',' + str(seqacc2[num]) + ',' + str(seqacc3[num]))
+    else:
+        run(session, 'alphafold predict ' + str(seqacc[num]) + ',' + str(seqacc2[num]))
     global first
     first = acc[num]
     global second
     second = acc2[num]
+    if seqacc3[num] != 0:
+        global third
+        third = acc3[num]
 
 class DirHandler(FileSystemEventHandler):
     accum = 0
@@ -75,7 +90,10 @@ class DirHandler(FileSystemEventHandler):
         run(session, 'turn y 2 180')
         run(session, 'wait 180')
         run(session, 'movie encode')
-        newfile = first + ' - ' + second + ' ' + str(date.today())
+        if third:
+            newfile = first + ' - ' + second + ' - ' + third + ' ' + str(date.today())
+        else:
+            newfile = first + ' - ' + second + ' ' + str(date.today())
         newdir = os.path.join(AlphaFold_Directory, newfile)
         os.rename(event.src_path, newdir)
 
