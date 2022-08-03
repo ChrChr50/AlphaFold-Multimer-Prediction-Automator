@@ -29,6 +29,7 @@ The Python script provided has a section where you will need to input the follow
 * CLIENT_SECRET - The secret key of the Box application being used
 * Box_VideoFolder_ID - The folder ID of the Box folder that contains the 3D protein animations
 * Box_ModelFolder_ID - The folder ID of the Box folder that contains the predicted model folders (the main folder)
+* VideoFile_Path - The desired path that 3D protein animations should go to
 
 The Box application and the Google Sheets bot have already been set up.
 
