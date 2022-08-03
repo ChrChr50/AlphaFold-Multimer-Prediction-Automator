@@ -48,7 +48,7 @@ if len(csix) > len(csev):
       acc.append(val)
       val2 = inter.acell('C' + str(x)).value
       acc2.append(val2)
-#     inter.update('G' + str(x), str(date.month) + '/' + str(date.day))
+      inter.update('G' + str(x), date.today().strftime("%m/%d/%y"))
 protlist(acc, seqacc)
 protlist(acc2, seqacc2)
 
@@ -121,7 +121,7 @@ def authenticate(oauth_class = OAuth2):
         auth_code_is_available.set()
 
     local_server = StoppableWSGIServer(host = 'localhost', port = 8080)
-    server_thread = Thread(target=lambda: local_oauth_redirect.run(server = local_server))
+    server_thread = Thread(target = lambda: local_oauth_redirect.run(server = local_server))
     server_thread.start()
 
     oauth = oauth_class(
